@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Схема $10 → $20 · лестница депозитов · отчёт</title>
+<style>
+html,body{margin:0;padding:0}
+body{background:#05060a;padding:26px 12px;-webkit-font-smoothing:antialiased}
+#doc{max-width:700px;margin:0 auto}
+</style>
+<style>
+  #doc{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#e8ebf2}
+  #doc .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+  #doc .bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:0 4px 12px}
+  #doc .bar-l{font-size:11px;letter-spacing:.14em;color:#7d8698;text-transform:uppercase}
+  #doc button{font-family:inherit;font-size:12px;padding:8px 14px;border-radius:9px;border:1px solid #232a38;background:#12161e;color:#e8ebf2;cursor:pointer;margin-left:8px}
+  #doc button:hover{border-color:#3a4457}
+  #doc button.primary{background:#ff2e4d;border-color:#ff2e4d;color:#fff;font-weight:500}
+  #doc button.primary:hover{background:#ff4560}
+  #doc button[disabled]{opacity:.55;cursor:default}
+
+  #doc .page{width:700px;height:990px;box-sizing:border-box;padding:42px 40px;background:#08090c;
+    border:1px solid #171c26;border-radius:14px;margin:0 auto 20px;position:relative;overflow:hidden}
+  #doc .glow{position:absolute;pointer-events:none;border-radius:50%}
+  #doc .g1{width:620px;height:620px;top:-240px;left:-140px;background:radial-gradient(circle,rgba(255,46,77,.30) 0%,rgba(255,46,77,0) 68%);animation:pulse 6s ease-in-out infinite}
+  #doc .g2{width:520px;height:520px;bottom:-200px;right:-160px;background:radial-gradient(circle,rgba(46,150,255,.16) 0%,rgba(46,150,255,0) 70%);animation:pulse 8s ease-in-out infinite 1s}
+  @keyframes pulse{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
+  #doc .grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:44px 44px;pointer-events:none}
+  #doc .phead{position:relative;display:flex;align-items:center;gap:8px;font-size:10.5px;letter-spacing:.16em;color:#7d8698;text-transform:uppercase;padding-bottom:13px;border-bottom:1px solid #171c26}
+  #doc .phead .dot{width:7px;height:7px;border-radius:50%;background:#ff2e4d;animation:blip 2.4s ease-in-out infinite}
+  @keyframes blip{0%,100%{opacity:1}50%{opacity:.25}}
+  #doc .phead .sep{color:#39414f}
+  #doc .pfoot{position:absolute;left:40px;right:40px;bottom:24px;display:flex;justify-content:space-between;font-size:10.5px;color:#5b6373;letter-spacing:.1em;text-transform:uppercase;border-top:1px solid #171c26;padding-top:11px}
+
+  #doc .reveal{opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s ease}
+  #doc .reveal.in{opacity:1;transform:none}
+  #doc .d1{transition-delay:.08s}#doc .d2{transition-delay:.16s}#doc .d3{transition-delay:.24s}
+  #doc .d4{transition-delay:.32s}#doc .d5{transition-delay:.4s}#doc .d6{transition-delay:.48s}
+
+  #doc .kicker{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#ff2e4d;margin-bottom:13px}
+  #doc h1{font-size:66px;line-height:1;font-weight:500;margin:0 0 15px;letter-spacing:-.03em}
+  #doc h1 .arrow{color:#ff2e4d}
+  #doc .sub{font-size:15.5px;line-height:1.5;color:#9aa3b5;max-width:500px;margin-bottom:26px}
+  #doc .hero{display:flex;align-items:flex-end;gap:14px;padding:20px 22px;border:1px solid #232a38;border-radius:14px;background:linear-gradient(135deg,rgba(255,46,77,.10),rgba(255,46,77,0) 62%)}
+  #doc .hero-num{font-size:52px;font-weight:500;color:#ff2e4d;line-height:.95;letter-spacing:-.02em}
+  #doc .hero-cap{font-size:11px;color:#7d8698;letter-spacing:.12em;text-transform:uppercase;padding-bottom:7px}
+  #doc .tiles{display:flex;gap:11px;margin-top:15px}
+  #doc .tile{flex:1;border:1px solid #1c222d;border-radius:12px;padding:13px 13px 11px;background:#0d1016}
+  #doc .tv{font-size:24px;font-weight:500;color:#ff5a6e;letter-spacing:-.02em;line-height:1.1}
+  #doc .tk{font-size:10.5px;color:#7d8698;margin-top:5px;line-height:1.35}
+
+  #doc h2{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:#7d8698;font-weight:400;margin:0 0 18px;display:flex;align-items:center;gap:10px}
+  #doc h2 .n{color:#ff2e4d;font-weight:500}
+  #doc h2:after{content:"";flex:1;height:1px;background:#171c26}
+  #doc h3{font-size:12px;color:#9aa3b5;font-weight:400;margin:0 0 10px;letter-spacing:.04em}
+
+  #doc table{width:100%;border-collapse:collapse;font-size:12px}
+  #doc th{text-align:right;font-weight:400;color:#6f7889;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;padding:7px 9px;border-bottom:1px solid #1c222d}
+  #doc th:first-child,#doc td:first-child{text-align:left}
+  #doc td{text-align:right;padding:7px 9px;border-bottom:1px solid #141922;font-variant-numeric:tabular-nums;color:#c9d0dd}
+  #doc td.red{color:#ff5a6e;font-weight:500}
+  #doc td.grn{color:#2ee6a8;font-weight:500}
+  #doc tr.hl td{background:rgba(255,46,77,.07)}
+  #doc tr.cap td{border-bottom:none}
+
+  #doc .formula{border:1px solid #232a38;border-left:3px solid #ff2e4d;border-radius:12px;padding:18px 20px;background:#0d1016;margin-bottom:18px}
+  #doc .formula .lbl{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#7d8698;margin-bottom:11px}
+  #doc .formula .eq{font-size:17px;line-height:1.6;color:#c9d0dd}
+  #doc .formula .eq b{color:#ff2e4d;font-weight:500}
+  #doc .formula .res{margin-top:12px;padding-top:12px;border-top:1px solid #1c222d;font-size:26px;color:#ff2e4d;font-weight:500}
+  #doc .formula .res span{font-size:12.5px;color:#7d8698;font-weight:400;margin-left:10px}
+
+  #doc ul{list-style:none;padding:0;margin:0 0 18px}
+  #doc li{display:flex;gap:13px;padding:10px 0;border-bottom:1px solid #141922;font-size:13.5px;line-height:1.5;color:#c9d0dd}
+  #doc li .idx{font-size:11px;color:#5b6373;padding-top:3px;min-width:20px}
+  #doc li b{color:#ff4d66;font-weight:500}
+  #doc li .em{color:#e8ebf2}
+
+  #doc .warn{border:1px solid rgba(255,46,77,.34);border-radius:12px;padding:16px 18px;background:linear-gradient(135deg,rgba(255,46,77,.13),rgba(255,46,77,.02) 70%)}
+  #doc .warn .wt{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#ff2e4d;margin-bottom:8px}
+  #doc .warn p{margin:0;font-size:13.5px;line-height:1.55;color:#dbe0e9}
+  #doc .warn p b{color:#ff4d66;font-weight:500}
+  #doc .ok{border-color:rgba(46,230,168,.32);background:linear-gradient(135deg,rgba(46,230,168,.10),rgba(46,230,168,.02) 70%)}
+  #doc .ok .wt{color:#2ee6a8}
+  #doc .ok p b{color:#2ee6a8}
+
+  #doc .row{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #141922}
+  #doc .row .rl{width:88px;font-size:12.5px;color:#c9d0dd;text-align:right}
+  #doc .row .rl b{color:#e8ebf2;font-weight:500}
+  #doc .row .track{flex:1;height:20px;background:#12161e;border-radius:6px;overflow:hidden;border:1px solid #1c222d}
+  #doc .row .fill{height:100%;width:0;border-radius:5px;transition:width 1.1s cubic-bezier(.22,1,.36,1)}
+  #doc .row .fill.hot{background:linear-gradient(90deg,#ff2e4d,#ff7a8c)}
+  #doc .row .fill.mid{background:linear-gradient(90deg,#ff8a2e,#ffb45a)}
+  #doc .row .fill.cool{background:linear-gradient(90deg,#2e6dff,#5aa0ff)}
+  #doc .row .rv{width:56px;text-align:right;font-size:12.5px;color:#ff5a6e;font-weight:500}
+
+  #doc .mini{display:flex;gap:11px;margin-top:14px}
+  #doc .mini .m{flex:1;border:1px solid #1c222d;border-radius:12px;padding:13px;background:#0d1016;text-align:center}
+  #doc .mini .mv{font-size:22px;font-weight:500;color:#ff5a6e}
+  #doc .mini .mk{font-size:10.5px;color:#7d8698;margin-top:4px;line-height:1.4}
+  #doc .note{font-size:11.5px;color:#7d8698;line-height:1.55;margin-top:13px}
+  #doc .note b{color:#ff4d66}
+
+  #doc .verdict{border:1px solid rgba(255,46,77,.4);border-radius:14px;padding:20px;background:linear-gradient(135deg,rgba(255,46,77,.14),rgba(255,46,77,0) 72%);margin-top:18px}
+  #doc .verdict .vt{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:#7d8698;margin-bottom:12px}
+  #doc .verdict .vline{font-size:22px;line-height:1.35;color:#e8ebf2;font-weight:500;letter-spacing:-.01em}
+  #doc .verdict .vline em{font-style:normal;color:#ff2e4d}
+  #doc .sign{font-size:10.5px;color:#5b6373;line-height:1.7;margin-top:16px}
+  #doc .stack{display:flex;flex-direction:column;height:100%;position:relative}
+  #doc .body{position:relative;flex:1}
+  #doc .two{display:flex;gap:16px}
+  #doc .two > div{flex:1}
+  #doc .cap{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#6f7889;margin:0 0 8px}
+</style>
+</head>
+<body>
+
+<div id="doc">
+
+<div class="bar">
+  <div class="bar-l">Venice · отчёт по модели · лестница депозитов</div>
+  <div class="bar-r">
+    <button id="replay">Перезапустить анимации</button>
+    <button id="html">Скачать .html</button>
+    <button id="pdf" class="primary">Скачать PDF</button>
+  </div>
+</div>
+
+<!-- PAGE 1 -->
+<section class="page">
+  <div class="glow g1"></div><div class="glow g2"></div><div class="grid-bg"></div>
+  <div class="stack">
+    <div class="phead"><span class="dot"></span>Механика лестницы<span class="sep">/</span>психология лимитов<span class="sep">/</span>19.10.2026</div>
+    <div class="body" style="padding-top:36px">
+      <div class="kicker reveal">Что меняется, если второй взнос не может быть меньше $20</div>
+      <h1 class="reveal d1">Лестница<br><span class="arrow">$5 → $5 000</span></h1>
+      <div class="sub reveal d2">Первый круг — только тест: $5 или $10, ни больше, ни меньше. Всё, что выше, открывается <b style="color:#ff4d66">после первого вывода</b>. Дальше считаем резерв, вероятность по суммам и то, где схема ломается.</div>
+      <div class="hero reveal d3">
+        <div class="hero-num mono">2×</div>
+        <div class="hero-cap">множитель на каждом круге · 6 дней</div>
+      </div>
+      <div class="tiles">
+        <div class="tile reveal d4"><div class="tv mono">10<span style="font-size:15px;color:#7d8698">–20</span></div><div class="tk">кругов до потолка<br>в $5 000</div></div>
+        <div class="tile reveal d5"><div class="tv mono">60<span style="font-size:15px;color:#7d8698"> дн</span></div><div class="tk">жизнь одного<br>участника</div></div>
+        <div class="tile reveal d6"><div class="tv mono">2×</div><div class="tk">минимальный шаг<br>роста взноса</div></div>
+      </div>
+      <div class="note reveal d6" style="margin-top:16px">Главный вывод отчёта: <b>второй взнос в $20 закрывает твою первую выплату ровно в ноль</b> — но не больше. Дом держит у себя только первую десятку, а долг растёт вместе с лестницей. Всё живое в этой схеме держится на одном: участник обязан повышать взнос каждые 6 дней.</div>
+    </div>
+    <div class="pfoot"><span>Отчёт 01 / 06</span><span class="mono">venice.ai</span></div>
+  </div>
+</section>
+
+<!-- PAGE 2 -->
+<section class="page">
+  <div class="glow g1" style="opacity:.45"></div>
+  <div class="stack">
+    <div class="phead"><span class="dot"></span>Лестница взносов<span class="sep">/</span>что происходит с кассой</div>
+    <div class="body" style="padding-top:30px">
+      <h2 class="reveal"><span class="n">01</span> Почему $20 — это ровно ноль</h2>
+      <div class="note reveal d1" style="margin:0 0 16px">Второй взнос не может быть меньше $20 — то есть ровно равен твоей первой выплате. Ты отдал $20, тут же получил $20 обратно. Касса возвращается в исходную точку, а не растёт. Дальше всё зависит от того, <b>повышает участник взнос или стоит на месте</b>.</div>
+      <div class="two">
+        <div class="reveal d2">
+          <p class="cap">Если участник удваивает каждый круг</p>
+          <table>
+            <tr><th>Круг</th><th>Взнос</th><th>Долг 2×</th><th>Дома</th></tr>
+            <tr><td>1</td><td class="mono">10</td><td class="mono">20</td><td class="mono grn">+10</td></tr>
+            <tr><td>2</td><td class="mono">20</td><td class="mono">40</td><td class="mono grn">+10</td></tr>
+            <tr><td>3</td><td class="mono">40</td><td class="mono">80</td><td class="mono grn">+10</td></tr>
+            <tr><td>4</td><td class="mono">80</td><td class="mono">160</td><td class="mono grn">+10</td></tr>
+            <tr><td>5</td><td class="mono">160</td><td class="mono">320</td><td class="mono grn">+10</td></tr>
+            <tr><td>6</td><td class="mono">320</td><td class="mono">640</td><td class="mono grn">+10</td></tr>
+            <tr><td>7</td><td class="mono">640</td><td class="mono">1 280</td><td class="mono grn">+10</td></tr>
+            <tr><td>8</td><td class="mono">1 280</td><td class="mono">2 560</td><td class="mono grn">+10</td></tr>
+            <tr><td>9</td><td class="mono">2 560</td><td class="mono">5 120</td><td class="mono grn">+10</td></tr>
+            <tr class="hl cap"><td>10</td><td class="mono">5 000</td><td class="mono">10 000</td><td class="mono grn">+10</td></tr>
+          </table>
+        </div>
+        <div class="reveal d3">
+          <p class="cap">Если участник стоит на $20</p>
+          <table>
+            <tr><th>Круг</th><th>Взнос</th><th>Долг 2×</th><th>Дома</th></tr>
+            <tr><td>1</td><td class="mono">10</td><td class="mono">20</td><td class="mono grn">+10</td></tr>
+            <tr><td>2</td><td class="mono">20</td><td class="mono">40</td><td class="mono grn">+10</td></tr>
+            <tr><td>3</td><td class="mono">20</td><td class="mono">40</td><td class="mono red">−10</td></tr>
+            <tr><td>4</td><td class="mono">20</td><td class="mono">40</td><td class="mono red">−30</td></tr>
+            <tr><td>5</td><td class="mono">20</td><td class="mono">40</td><td class="mono red">−50</td></tr>
+            <tr><td>6</td><td class="mono">20</td><td class="mono">40</td><td class="mono red">−70</td></tr>
+            <tr><td>7</td><td class="mono">20</td><td class="mono">40</td><td class="mono red">−90</td></tr>
+            <tr><td>8</td><td class="mono">20</td><td class="mono">40</td><td class="mono red">−110</td></tr>
+            <tr><td>9</td><td class="mono">20</td><td class="mono">40</td><td class="mono red">−130</td></tr>
+            <tr class="cap"><td>10</td><td class="mono">20</td><td class="mono">40</td><td class="mono red">−150</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="warn reveal d4" style="margin-top:18px">
+        <div class="wt">Жёсткое правило схемы</div>
+        <p>Пока взнос удваивается — дом держит ровно <b>первую десятку</b> и ничего больше. Как только участник застревает на минималке, касса теряет <b>$20 за круг</b> и умирает за 5–7 кругов. Значит <b>минимальный шаг повышения взноса — 2×</b>, и это надо проговаривать в правилах, а не надеяться на сознательность.</p>
+      </div>
+    </div>
+    <div class="pfoot"><span>Отчёт 02 / 06</span><span class="mono">шаг роста: 2× за круг</span></div>
+  </div>
+</section>
+
+<!-- PAGE 3 -->
+<section class="page">
+  <div class="glow g2" style="top:-180px;bottom:auto"></div>
+  <div class="stack">
+    <div class="phead"><span class="dot"></span>Резерв<span class="sep">/</span>сколько нужно денег под потолок $5 000</div>
+    <div class="body" style="padding-top:30px">
+      <h2 class="reveal"><span class="n">02</span> Резерв = двойной потолок взноса</h2>
+      <div class="formula reveal d1">
+        <div class="lbl">Сколько денег должно лежать в кассе</div>
+        <div class="eq mono">РЕЗЕРВ = 2 × МАКСИМАЛЬНЫЙ ВЗНОС</div>
+        <div class="eq mono" style="margin-top:8px">МАКС. ВЗНОС = БЮДЖЕТ ÷ 2</div>
+        <div class="res mono">$5 000 <span>нужно на промо-лимит в $5 000</span></div>
+      </div>
+      <div class="note reveal d2" style="margin:0 0 14px">Выплата всегда в 2 раза больше взноса и приходит через 6 дней. Значит в момент выплаты тебе надо держать сумму, равную <b>двум взносам</b>. Один человек, закинувший $5 000, требует $10 000 в резерве — прямо в тот же день.</div>
+      <table class="reveal d3">
+        <tr><th>Бюджет</th><th>Безопасный макс. взнос</th><th>Промо $5 000</th><th>Вердикт</th></tr>
+        <tr><td class="mono">$1 000</td><td class="mono red">$500</td><td>нет</td><td style="text-align:right;color:#ff5a6e">ломается</td></tr>
+        <tr><td class="mono">$3 000</td><td class="mono">$1 500</td><td>нет</td><td style="text-align:right;color:#ffb45a">тесно</td></tr>
+        <tr><td class="mono">$5 000</td><td class="mono">$2 500</td><td>нет</td><td style="text-align:right;color:#ffb45a">тесно</td></tr>
+        <tr class="hl cap"><td class="mono">$10 000</td><td class="mono grn">$5 000</td><td style="color:#2ee6a8">ровно</td><td style="text-align:right;color:#2ee6a8">работает</td></tr>
+      </table>
+      <div class="warn reveal d4" style="margin-top:16px">
+        <div class="wt">Конфликт, который надо решить заранее</div>
+        <p>Баннер «лимит $5 000 только сегодня» и бюджет в <b>$1 000</b> — несовместимы. Один кит закидывает $5 000, ты через 6 дней должен отдать $10 000, а у тебя $1 000. Варианты: держать бюджет <b>$10 000</b>, либо ставить персональный лимит <b>$500</b> и промо делать до $2 500, либо честно предупреждать «крупные суммы выводятся частями».</p>
+      </div>
+      <div class="note reveal d5">Отдельно: если участник дошёл до потолка $5 000 и остался на нём — взнос перестаёт расти, а долг остаётся двойным. Касса теряет <b>$5 000 за круг</b>. Потолок — это не финиш, а начало проедания.</div>
+    </div>
+    <div class="pfoot"><span>Отчёт 03 / 06</span><span class="mono">потолок: $5 000</span></div>
+  </div>
+</section>
+
+<!-- PAGE 4 -->
+<section class="page">
+  <div class="glow g1" style="opacity:.4"></div>
+  <div class="stack">
+    <div class="phead"><span class="dot"></span>Тестовый тариф<span class="sep">/</span>распределение $5 против $10</div>
+    <div class="body" style="padding-top:30px">
+      <h2 class="reveal"><span class="n">03</span> Сколько выберут $5, а сколько $10</h2>
+      <div class="note reveal d1" style="margin:0 0 16px">Первый круг — не про деньги, а про доказательство вывода. Поэтому решает не выручка, а барьер входа. Оценка ниже — по типичному поведению в бинарном выборе, где верхняя опция всего вдвое дороже.</div>
+      <table class="reveal d2">
+        <tr><th>Как показываем</th><th>Выберут $5</th><th>Выберут $10</th><th>Средний чек</th></tr>
+        <tr class="hl"><td>По умолчанию подсвечен $10</td><td class="mono">32%</td><td class="mono red">68%</td><td class="mono">$8.4</td></tr>
+        <tr><td>Без подсветки, выбор равный</td><td class="mono">55%</td><td class="mono">45%</td><td class="mono">$7.3</td></tr>
+        <tr><td>По умолчанию подсвечен $5</td><td class="mono red">75%</td><td class="mono">25%</td><td class="mono">$6.3</td></tr>
+      </table>
+      <div class="mini reveal d3">
+        <div class="m"><div class="mv mono">$8.4</div><div class="mk">средний чек при<br>подсветке $10</div></div>
+        <div class="m"><div class="mv mono">+21%</div><div class="mk">нужный прирост конверсии,<br>чтобы $5 себя оправдал</div></div>
+        <div class="m"><div class="mv mono">25–40%</div><div class="mk">реальный прирост конверсии<br>от появления $5</div></div>
+      </div>
+      <div class="note reveal d4">Математика простая: тариф $5 срезает средний чек на 17%, но снимает барьер «отдать десятку» и даёт прирост конверсии <b>25–40%</b>. Порог окупаемости — 21%. Значит $5-тариф <b>выгоден</b>, если аудитория скептичная и малодоходная — то есть на первой волне друзей.</div>
+      <div class="ok warn reveal d5" style="margin-top:14px">
+        <div class="wt">Что делать с этой развилкой</div>
+        <p>Ставь <b>$5 по умолчанию</b> — ты покупаешь не деньги, а массу людей. А тех, кто сам выбрал $10, помечай отдельно: это <b>самоотбор на будущего крупного</b>. С ними работай лично, им и показывай баннер с лимитом. Один выбор за $10 на входе говорит о человеке больше, чем анкета.</p>
+      </div>
+      <div class="note reveal d6">Важно: разница между $5 и $10 по абсолютной потере — всего <b>$5</b> с человека. На 100 людях это $500 в любую сторону, то есть копейки против цены ошибки на втором круге, где средний взнос уже <b>$150–200</b>.</div>
+    </div>
+    <div class="pfoot"><span>Отчёт 04 / 06</span><span class="mono">тест: $5 / $10</span></div>
+  </div>
+</section>
+
+<!-- PAGE 5 -->
+<section class="page">
+  <div class="glow g2" style="top:-160px;bottom:auto"></div>
+  <div class="stack">
+    <div class="phead"><span class="dot"></span>Психология лимита<span class="sep">/</span>баннер «только сегодня ×5»</div>
+    <div class="body" style="padding-top:30px">
+      <h2 class="reveal"><span class="n">04</span> Кто дойдёт до $1 000 и выше</h2>
+      <div class="note reveal d1" style="margin:0 0 14px">Оценка — доля от тех, кто <b>вообще вернулся на второй круг</b> (по опыту, возвращается 40–50%). Плашка «персональный лимит поднят до $5 000 на 24 часа, обычно $1 000» работает на трёх рычагах: дефицит времени, персональная привилегия и якорь — на фоне $5 000 сумма $1 000 выглядит скромно.</div>
+      <div class="reveal d2">
+        <div class="row"><div class="rl">до <b>$50</b></div><div class="track"><div class="fill cool" data-w="100"></div></div><div class="rv mono">42%</div></div>
+        <div class="row"><div class="rl"><b>$50</b></div><div class="track"><div class="fill cool" data-w="50"></div></div><div class="rv mono">21%</div></div>
+        <div class="row"><div class="rl"><b>$100</b></div><div class="track"><div class="fill mid" data-w="36"></div></div><div class="rv mono">15%</div></div>
+        <div class="row"><div class="rl"><b>$200</b></div><div class="track"><div class="fill mid" data-w="21"></div></div><div class="rv mono">9%</div></div>
+        <div class="row"><div class="rl"><b>$500</b></div><div class="track"><div class="fill hot" data-w="14"></div></div><div class="rv mono">6%</div></div>
+        <div class="row"><div class="rl"><b>$1 000</b></div><div class="track"><div class="fill hot" data-w="10"></div></div><div class="rv mono">4%</div></div>
+        <div class="row"><div class="rl"><b>$2 000</b></div><div class="track"><div class="fill hot" data-w="5"></div></div><div class="rv mono">2%</div></div>
+        <div class="row" style="border-bottom:none"><div class="rl"><b>$5 000</b></div><div class="track"><div class="fill hot" data-w="2.4"></div></div><div class="rv mono">1%</div></div>
+      </div>
+      <div class="mini reveal d3">
+        <div class="m"><div class="mv mono">~$180</div><div class="mk">средний второй взнос<br>с включённым баннером</div></div>
+        <div class="m"><div class="mv mono">7%</div><div class="mk">заходят выше $1 000<br>(без баннера — 2%)</div></div>
+        <div class="m"><div class="mv mono">1%</div><div class="mk">выжимают ровно<br>максимум $5 000</div></div>
+      </div>
+      <div class="note reveal d4">Баннер <b>удваивает долю крупных</b> (2% → 7%) и поднимает средний второй взнос примерно с $80–120 до $150–200. Это самый дешёвый рычаг во всей схеме: стоит ноль, а поднимает выручку почти в два раза.</div>
+      <div class="warn reveal d5" style="margin-top:12px">
+        <div class="wt">Обратная сторона</div>
+        <p>Крупный взнос — это <b>обязательство, а не прибыль</b>. $5 000 на входе = $10 000 к выплате. Кит приходит один, а денег требует как десять обычных. И самое неприятное: он уходит первым, потому что ему $20 прибыли смешно — он заберёт и не вернётся.</p>
+      </div>
+    </div>
+    <div class="pfoot"><span>Отчёт 05 / 06</span><span class="mono">крупные: 7%</span></div>
+  </div>
+</section>
+
+<!-- PAGE 6 -->
+<section class="page">
+  <div class="glow g1" style="top:auto;bottom:-260px;left:-180px"></div>
+  <div class="stack">
+    <div class="phead"><span class="dot"></span>Волны<span class="sep">/</span>от бедных к богатым</div>
+    <div class="body" style="padding-top:30px">
+      <h2 class="reveal"><span class="n">05</span> Порядок волн и что с этим делать</h2>
+      <div class="note reveal d1" style="margin:0 0 14px">Ты прав в главном: сначала это идёт по небогатым, а деньги приходят позже и сверху. Но у этого есть цена — и её надо заложить в план, а не обнаружить.</div>
+      <ul>
+        <li class="reveal d2"><span class="idx mono">01</span><span><span class="em">Волна 1, 0–30 дней: друзья и знакомые.</span> Взносы $5–50, дают массу и социальное доказательство. Здесь работает $5 по умолчанию и подсветка вывода.</span></li>
+        <li class="reveal d3"><span class="idx mono">02</span><span><span class="em">Волна 2, 30–60 дней: знакомые знакомых.</span> Средний класс, взносы $50–300. Здесь включается баннер и «лестница» — люди уже верят, потому что видели выплату.</span></li>
+        <li class="reveal d4"><span class="idx mono">03</span><span><span class="em">Волна 3, 60–90 дней: люди с деньгами.</span> Взносы $1 000+. Заходят <b>только после чужого вывода</b> и только по личной рекомендации. $20 прибыли им смешно — им надо продавать $5 000.</span></li>
+        <li class="reveal d5"><span class="idx mono">04</span><span><span class="em">Кит — не подарок, а риск.</span> Один $5 000 при бюджете $1 000 тебя раздавит. Держи под крупные отдельный резерв или ограничивай лимит.</span></li>
+        <li class="reveal d6"><span class="idx mono">05</span><span><span class="em">Потолок $5 000 = конечность.</span> От $10 до $5 000 — это 10 удвоений, то есть ~60 дней на человека. Дальше касса начинает проедать по $5 000 за круг.</span></li>
+      </ul>
+      <div class="verdict reveal d6">
+        <div class="vt">Вывод отчёта</div>
+        <div class="vline">Схема жива ровно столько, сколько растут взносы. Резерв под лимит $5 000 — это <em>$10 000</em>, тест стоит <em>$5</em>, баннер поднимает крупных с <em>2% до 7%</em>, а жизнь одного участника — <em>~60 дней</em>.</div>
+      </div>
+      <div class="sign reveal d6">
+        Оценки по долям — модельные, на основе типичного поведения в бинарном ценовом выборе и механиках дефицита. Точные цифры получаются только на своём трафике: первые 50 человек дадут реальную кривую, дальше модель можно уточнить.<br>
+        Расчёт при множителе 2×, цикле 6 дней, первом взносе $5–10, втором от $20 и потолке $5 000.
+      </div>
+    </div>
+    <div class="pfoot"><span>Отчёт 06 / 06</span><span class="mono">venice.ai</span></div>
+  </div>
+</section>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(function(){
+  var doc = document.getElementById('doc');
+  var pages = Array.prototype.slice.call(doc.querySelectorAll('.page'));
+
+  function growBars(){
+    doc.querySelectorAll('.fill').forEach(function(f, i){
+      f.style.width = '0';
+      setTimeout(function(){ f.style.width = f.dataset.w + '%'; }, 120 + i * 80);
+    });
+  }
+
+  var io;
+  function observe(){
+    if (io) io.disconnect();
+    io = new IntersectionObserver(function(es){
+      es.forEach(function(en){ if (en.isIntersecting) en.target.classList.add('in'); });
+    }, { threshold: 0.06, rootMargin: '0px 0px -4% 0px' });
+    doc.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+  }
+
+  function runAll(){
+    doc.querySelectorAll('.reveal').forEach(function(el){ el.classList.remove('in'); });
+    observe();
+    growBars();
+    setTimeout(function(){
+      pages[0].querySelectorAll('.reveal').forEach(function(e){ e.classList.add('in'); });
+    }, 60);
+  }
+
+  document.getElementById('replay').addEventListener('click', runAll);
+
+  function saveBlob(name, text){
+    var blob = new Blob([text], { type:'text/html;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 5000);
+  }
+
+  document.getElementById('html').addEventListener('click', function(){
+    var btn = this;
+    btn.disabled = true; btn.textContent = 'Собираю…';
+    try{
+      var full = '<!doctype html>\n' + document.documentElement.outerHTML;
+      saveBlob('shema-lestnica-5-5000.html', full);
+      btn.textContent = 'Файл скачан';
+    } catch(e){
+      console.error(e); btn.textContent = 'Ошибка';
+    } finally {
+      btn.disabled = false;
+      setTimeout(function(){ btn.textContent = 'Скачать .html'; }, 2200);
+    }
+  });
+
+  document.getElementById('pdf').addEventListener('click', async function(){
+    var btn = this;
+    btn.disabled = true; btn.textContent = 'Собираю…';
+    try{
+      if (document.fonts && document.fonts.ready){ try{ await document.fonts.ready; }catch(e){} }
+      if (io) io.disconnect();
+      doc.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
+      doc.querySelectorAll('.fill').forEach(function(f){ f.style.transition = 'none'; f.style.width = f.dataset.w + '%'; });
+      await new Promise(function(r){ setTimeout(r, 500); });
+
+      var W = 700, H = 990, S = 2;
+      var pdf = new window.jspdf.jsPDF({ unit:'px', format:[W,H], orientation:'portrait', compress:true });
+      for (var i = 0; i < pages.length; i++){
+        var canvas = await html2canvas(pages[i], { backgroundColor:'#08090c', scale:S, useCORS:true, logging:false, width:W, height:H, windowWidth:W });
+        var img = canvas.toDataURL('image/jpeg', 0.94);
+        if (i > 0) pdf.addPage([W,H], 'portrait');
+        pdf.addImage(img, 'JPEG', 0, 0, W, H);
+      }
+      pdf.save('shema-lestnica-5-5000.pdf');
+      btn.textContent = 'PDF готов';
+    } catch(e){
+      console.error(e);
+      btn.textContent = 'Ошибка — попробуй ещё';
+    } finally {
+      doc.querySelectorAll('.fill').forEach(function(f){ f.style.transition = ''; });
+      btn.disabled = false;
+      observe();
+      setTimeout(function(){ btn.textContent = 'Скачать PDF'; }, 2200);
+    }
+  });
+
+  runAll();
+})();
+</script>
+</body>
+</html>
